@@ -1,19 +1,20 @@
 ﻿#if UNITY_ADS_ENABLED
 using System;
+using MF.Advertisement.src.Infrastructure.ViewManagers;
 using UnityEngine.Advertisements;
 
 namespace AdsModule.src.Feature.Managers
 {
-    public class UnityAdsViewManager : IUnityAdsViewManager, IUnityAdsListener
+    public class UnityAdsViewManager : IAdsViewManager, IUnityAdsListener
     {
         private readonly IUnityAdsManager unityAdsManager;
 
         public bool IsInitialized { get; private set; }
     
-        public event Action<string> OnUnityAdsReadyEvent;
-        public event Action<string> OnUnityAdsDidErrorEvent;
-        public event Action<string> OnUnityAdsDidStartEvent;
-        public event Action<string, ShowResult> OnUnityAdsDidFinishEvent;
+        public event Action<string> OnAdsReady;
+        public event Action<string> OnAdsErrorE;
+        public event Action<string> OnAdsStart;
+        public event Action<string, ShowResult> OnAdsFinish;
     
         public UnityAdsViewManager(IUnityAdsManager unityAdsManager)
         {
@@ -47,22 +48,22 @@ namespace AdsModule.src.Feature.Managers
 
         public void OnUnityAdsReady(string placementId)
         {
-            OnUnityAdsReadyEvent?.Invoke(placementId);
+            OnAdsReady?.Invoke(placementId);
         }
 
         public void OnUnityAdsDidError(string message)
         {
-            OnUnityAdsDidErrorEvent?.Invoke(message);
+            OnAdsErrorE?.Invoke(message);
         }
 
         public void OnUnityAdsDidStart(string placementId)
         {
-            OnUnityAdsDidStartEvent?.Invoke(placementId);
+            OnAdsStart?.Invoke(placementId);
         }
 
         public void OnUnityAdsDidFinish(string placementId, ShowResult showResult)
         {
-            OnUnityAdsDidFinishEvent?.Invoke(placementId, showResult);
+            OnAdsFinish?.Invoke(placementId, showResult);
         }
     }
 }

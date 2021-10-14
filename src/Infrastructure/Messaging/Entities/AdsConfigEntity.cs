@@ -2,7 +2,7 @@
 
 namespace AdsModule.src.Feature.Entities
 {
-    public class AdsConfigEntity : BaseEntity
+    public class AdsConfigEntity
     {
         public string GameId { get; set; }
         
