@@ -5,9 +5,9 @@ using MF.Advertisement.src.Infrastructure.Messaging.RequestResponse.PreloadAds;
 using MF.Advertisement.src.Infrastructure.ViewManagers;
 using Zenject;
 
-namespace MF.Advertisement.src.IronSource.Installers
+namespace MF.Advertisement.src.AdsEditorMock.Installers
 {
-    public class IronSourceSignalsInstaller : Installer<IronSourceSignalsInstaller>
+    public class AdsEditorMockSignalsInstaller : Installer<AdsEditorMockSignalsInstaller>
     {
         [Inject]
         private IEventBus eventBus;
@@ -23,8 +23,7 @@ namespace MF.Advertisement.src.IronSource.Installers
             var adsViewManager = Container.Resolve<IAdsViewManager>();
             var result = await adsViewManager.ShowAds(request.Context);
 
-            //TODO: Implement
-            request.Callback(new ShowAdsResponse(new AdsResultEntity()));
+            request.Callback(new ShowAdsResponse(result));
         }
         
         private async void PreloadAdsHandler(PreloadAdsRequest request)

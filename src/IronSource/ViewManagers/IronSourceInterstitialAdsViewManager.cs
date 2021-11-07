@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using IronSource.Scripts;
+using MF.Advertisement.src.Infrastructure.Entities;
 using UnityEngine;
 using IronSourceRaw = global::IronSource.Scripts.IronSource;
 
@@ -12,7 +13,7 @@ namespace MF.Advertisement.src.IronSource.ViewManagers
 
         UniTask<bool> Load(string placementId = null);
         
-        UniTask<bool> Show(string placementId = null);
+        UniTask<AdsResultEntity> Show(string placementId = null);
     }
     
     public class IronSourceInterstitialAdsViewManager : IInterstitialViewManager
@@ -71,21 +72,33 @@ namespace MF.Advertisement.src.IronSource.ViewManagers
             return waitingSource.Task;
         }
 
-        public UniTask<bool> Show(string placementId = null)
+        public UniTask<AdsResultEntity> Show(string placementId = null)
         {
             if (!isShowReady)
             {
                 Debug.LogError($"Iron source show not available");
-                return UniTask.FromResult(false);
+                var result = new AdsResultEntity()
+                {
+                    PlacementId = placementId,
+                    ResultState = AdsResultState.WasNotReady,
+                };
+                
+                return UniTask.FromResult(result);
             }
 
-            var completionSource = new UniTaskCompletionSource<bool>();
+            var completionSource = new UniTaskCompletionSource<AdsResultEntity>();
             if (!string.IsNullOrEmpty(placementId))
             {
                 if (IronSourceRaw.Agent.isInterstitialPlacementCapped(placementId))
                 {
+                    var result = new AdsResultEntity()
+                    {
+                        PlacementId = placementId,
+                        ResultState = AdsResultState.Capped,
+                    };
+                    
                     Debug.Log($"Iron source ads cap for placement {placementId}");
-                    return UniTask.FromResult(false);
+                    return UniTask.FromResult(result);
                 }        
                 
                 isShowReady = false;
@@ -100,14 +113,27 @@ namespace MF.Advertisement.src.IronSource.ViewManagers
             void OnShown()
             {
                 DisposeSubscribers();
-                completionSource.TrySetResult(true);
+                var result = new AdsResultEntity()
+                {
+                    PlacementId = placementId,
+                    ResultState = AdsResultState.Shown,
+                };
+                
+                completionSource.TrySetResult(result);
             }
 
             void OnFailed(IronSourceError error)
             {
+                var result = new AdsResultEntity()
+                {
+                    Rewards = null,
+                    PlacementId = placementId,
+                    ResultState = AdsResultState.Failed,
+                };
+                
                 Debug.LogError($"Can't show ad");
                 DisposeSubscribers();
-                completionSource.TrySetResult(false);
+                completionSource.TrySetResult(result);
             }
 
             void DisposeSubscribers()

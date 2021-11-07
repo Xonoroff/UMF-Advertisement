@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using MF.Advertisement.src.Infrastructure.Entities;
 
 namespace MF.Advertisement.src.Infrastructure.ViewManagers
@@ -8,10 +9,10 @@ namespace MF.Advertisement.src.Infrastructure.ViewManagers
     {
         bool IsInitialized { get; }
         
-        void Initialize();
+        UniTask<bool> Initialize();
         
-        void ShowAds(AdsContextEntity context);
+        UniTask<AdsResultEntity> ShowAds(AdsContextEntity context);
         
-        void PreloadAds(AdsContextEntity context);
+        UniTask<bool> PreloadAds(AdsContextEntity context);
     }
 }

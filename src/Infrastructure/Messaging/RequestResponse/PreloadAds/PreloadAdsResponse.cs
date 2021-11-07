@@ -2,6 +2,11 @@
 {
     public class PreloadAdsResponse
     {
-        
+        public bool Result { get; }
+
+        public PreloadAdsResponse(bool result)
+        {
+            Result = result;
+        }
     }
 }

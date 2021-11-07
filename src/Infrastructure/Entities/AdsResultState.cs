@@ -7,5 +7,6 @@
         Skipped,
         Failed,
         Error,
+        Capped,
     }
 }

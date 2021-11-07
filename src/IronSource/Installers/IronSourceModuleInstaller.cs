@@ -13,11 +13,10 @@ namespace MF.Advertisement.src.IronSource.Installers
         {
             Container.Bind<IAdsViewManager>().To<IronSourceViewManager>().AsCached();
             Container.Bind<IInterstitialViewManager>().To<IronSourceInterstitialAdsViewManager>().AsCached();
-            
+
             Container.Bind<IIronSourceManager>().To<IronSourceManager>().AsTransient();
-            
+
             Container.Bind<IronSourceInitializeCommand>().AsTransient();
-            
             
             IronSourceSignalsInstaller.Install(Container);
         }

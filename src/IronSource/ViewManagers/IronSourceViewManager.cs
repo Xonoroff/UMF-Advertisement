@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using Cysharp.Threading.Tasks;
 using MF.Advertisement.src.Infrastructure.Entities;
 using MF.Advertisement.src.Infrastructure.ViewManagers;
 using MF.Advertisement.src.IronSource.Managers;
@@ -21,7 +22,7 @@ namespace MF.Advertisement.src.IronSource.ViewManagers
             this.interstitialViewManager = interstitialViewManager;
         }
         
-        public async void Initialize()
+        public async UniTask<bool> Initialize()
         {
             if (!IsInitialized)
             {
@@ -31,23 +32,38 @@ namespace MF.Advertisement.src.IronSource.ViewManagers
                 IronSourceRaw.Agent.validateIntegration();
                 
                 interstitialViewManager.Initialize();
+
+                return true;
             }
+
+            return true;
         }
 
-        public void ShowAds(AdsContextEntity context)
+        public async UniTask<AdsResultEntity> ShowAds(AdsContextEntity context)
         {
             if (context.AdsType == AdsType.Interstitial)
             {
-                interstitialViewManager.Show(context.PlacementId);
+                var result = await interstitialViewManager.Show(context.PlacementId);
+                return result;
             }
+
+            return new AdsResultEntity()
+            {
+                Rewards = null,
+                PlacementId = context.PlacementId,
+                ResultState = AdsResultState.Error,
+            };
         }
 
-        public void PreloadAds(AdsContextEntity context)
+        public async UniTask<bool> PreloadAds(AdsContextEntity context)
         {
             if (context.AdsType == AdsType.Interstitial)
             {
-                interstitialViewManager.Load(context.PlacementId);
+                var result = await interstitialViewManager.Load(context.PlacementId);
+                return result;
             }
+
+            return false;
         }
     }
 }
