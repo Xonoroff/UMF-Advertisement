@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
+﻿
 using Cysharp.Threading.Tasks;
-using IronSource.Scripts;
 using MF.Advertisement.src.Infrastructure.Entities;
 using UnityEngine;
-using IronSourceRaw = global::IronSource.Scripts.IronSource;
 
 namespace MF.Advertisement.src.IronSource.ViewManagers
 {
@@ -67,7 +65,7 @@ namespace MF.Advertisement.src.IronSource.ViewManagers
             IronSourceEvents.onInterstitialAdReadyEvent += CompleteSourceSuccess;
             IronSourceEvents.onInterstitialAdLoadFailedEvent += CompleteSourceFail;
             
-            IronSourceRaw.Agent.loadInterstitial();
+            global::IronSource.Agent.loadInterstitial();
 
             return waitingSource.Task;
         }
@@ -89,7 +87,7 @@ namespace MF.Advertisement.src.IronSource.ViewManagers
             var completionSource = new UniTaskCompletionSource<AdsResultEntity>();
             if (!string.IsNullOrEmpty(placementId))
             {
-                if (IronSourceRaw.Agent.isInterstitialPlacementCapped(placementId))
+                if (global::IronSource.Agent.isInterstitialPlacementCapped(placementId))
                 {
                     var result = new AdsResultEntity()
                     {
@@ -102,12 +100,12 @@ namespace MF.Advertisement.src.IronSource.ViewManagers
                 }        
                 
                 isShowReady = false;
-                IronSourceRaw.Agent.showInterstitial(placementId);
+                global::IronSource.Agent.showInterstitial(placementId);
             }
             else
             {
                 isShowReady = false;
-                IronSourceRaw.Agent.showInterstitial();
+                global::IronSource.Agent.showInterstitial();
             }
 
             void OnShown()

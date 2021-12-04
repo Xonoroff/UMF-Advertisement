@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks;
 using MF.Advertisement.src.Infrastructure.Entities;
 using MF.Advertisement.src.Infrastructure.ViewManagers;
 using MF.Advertisement.src.IronSource.Managers;
-using IronSourceRaw = global::IronSource.Scripts.IronSource;
 
 namespace MF.Advertisement.src.IronSource.ViewManagers
 {
@@ -28,8 +27,8 @@ namespace MF.Advertisement.src.IronSource.ViewManagers
             {
                 IsInitialized = true;
                 var dataEntity = await ironSourceManager.GetDataEntity(CancellationToken.None);
-                IronSourceRaw.Agent.init(dataEntity.IronSourceAppKey);
-                IronSourceRaw.Agent.validateIntegration();
+                global::IronSource.Agent.init(dataEntity.IronSourceAppKey);
+                global::IronSource.Agent.validateIntegration();
                 
                 interstitialViewManager.Initialize();
 
